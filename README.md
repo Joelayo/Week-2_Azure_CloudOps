@@ -1,11 +1,17 @@
-   # 🚀 2ndWeeksofCloudOps - 3 tier Application
+## Project Title
 
-✨This repository is created to learn and deploy  3-tier application on aws cloud. this project contain three layer Presentation, Application and database
+Cloud-Enabled Three-Tier Web Application Deployment with Azure
+
+## Overview
+
+My project aims to deploy a highly available and scalable three-tier web application on Microsoft Azure, leveraging the cloud's powerful services and features. The architecture comprises a frontend, backend, and database tier, each hosted on separate subnets for improved security and isolation.
+
+This project showcases the power of Azure's infrastructure as a service (IaaS) and platform as a service (PaaS) offerings to deploy a robust and reliable three-tier web application architecture. By utilizing Azure's load balancers, VMSS, managed databases, and security features, we ensure our application is highly available, scalable, and secure, providing an excellent user experience while minimizing operational overhead.
 
 ## 🏠 Architecture
 ![Architecture of the application](architectur.gif)
 
-## Tech stack
+## Web Application Tech stack
 
 - React 
 - Nodejs
@@ -13,16 +19,16 @@
 
 ## 🖥️ Installation of frontend
 
-**Note**: You should have nodejs installed on your system. [Node.js](https://nodejs.org/)
+**Note**: You should have Nodejs installed on your system. [Node.js](https://nodejs.org/)
 
-👉 let install dependency to run react application
+👉 Let's install dependency to run react application
 
 ```sh
 cd client
 npm install
 ```
 
-**Note**: you have to change one file for backend API. you will find that `src/pages/config.js`
+**Note**: you have to change one file for the backend API. you will find that `src/pages/config.js`
 
 ```sh
 vim src/pages/config.js
@@ -33,14 +39,14 @@ vim src/pages/config.js
 const API_BASE_URL = "http://localhost:portNumber";
 export default API_BASE_URL;
 ```
-make sure you EDIT above file depends on your scenario
+make sure you EDIT the above file depending on your scenario
 
 
 ```sh
 npm run build 
 ```
 
-above command creat optimize build of the application in client folder. `build/` you will find all the files that you can serve through **Apache** or **Nginx**
+above command create optimize build of the application in the client folder. `build/` you will find all the files that you can serve through **Apache** or **Nginx**
 that's the whole setup of the frontend
 
 ##  🖥️ ️Installation of backend
@@ -53,7 +59,7 @@ that's the whole setup of the frontend
 cd backend
 npm install
 ```
-Now we need to create .env file that holds all the configuration details of the backend. you should be in backend directory
+Now we need to create a .env file that holds all the configuration details of the backend. you should be in the backend directory
 
 ```sh
 vim .env
@@ -66,7 +72,7 @@ DB_USERNAME=user_name_of_MySQL
 DB_PASSWORD=passwod_of_my_sql
 PORT=3306
 ```
-**Note** : please change above file depending on your setup. like you may use RDS(AWS) or Local mysql-server on your system. your mysql contain database with the name of `test` and it should has `books` table. You can you test.sql to create table 
+**Note**: please change the above file depending on your setup. You may use Azure Databases for MySql or a Local MySql server on your system. your MySQL contains a database with the name of `test` and should have a `books` table. You can use test.sql to create a table 
 
 
 ```sh
@@ -78,20 +84,20 @@ mysql -h <<RDS_ENDPOINT OR localhost>> -u <<USER_NAME>> -p<<PASSWORD>> test < te
 ```
 
 
-please install pm2 if you want to run on cloud. you may need sudo privilages to installed it because we are going to installed globally.
+Install pm2 if you want to run on the cloud. you may need sudo privileges to install it because we are going to install it globally.
 
 ```sh
 npm install -g pm2
 ```
 
-now you can run this application. make sure you are in backend directory
+Now you can run this application. Make sure you are in the backend directory
 
 
 ```sh
 pm2 start index.js --name "backendAPI"
 ```
 
-above command will start node server on port 80, you can modify the port number in `index.js` file
+The above command will start the node server on port 80, you can modify the port number in the `index.js` file
 
 ✈️ Now we are Ready to see the application
 
