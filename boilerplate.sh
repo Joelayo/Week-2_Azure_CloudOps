@@ -170,6 +170,11 @@ az network public-ip create \
     --location "$location" \
     --allocation-method "Dynamic"
 
+az ssh key create \
+    --resource-group "$resourceGroupName" \
+    --name "MySSHKey" \
+    --public-key "~/.ssh/host-key.pub"
+
 # Create the jumpbox virtual machine with the B2 size (Change image if needed)
 az vm create \
     --resource-group "$resourceGroupName" \
@@ -179,7 +184,7 @@ az vm create \
     --image "UbuntuLTS" \
     --admin-username "azureuser" \
     --authentication-type "ssh" \
-    --ssh-key-value "~/.ssh/web-key.pem" \
+    --ssh-key-value "~/.ssh/host-key.pub" \
     --size "Standard_B2s"
     --os-disk-storage-account-type "Standard_LRS"
 
