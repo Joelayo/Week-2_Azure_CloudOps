@@ -65,7 +65,7 @@ vim .env
 add below content 
 
 ```javascript
-DB_HOST=localhost or URL_of_RDS
+DB_HOST=localhost or URL_of_Azure_Database
 DB_USERNAME=user_name_of_MySQL
 DB_PASSWORD=passwod_of_my_sql
 PORT=3306
