@@ -8,7 +8,7 @@ subnetJumpboxName="jumpbox-Subnet"
 subnetFrontendName="web-tier-Subnet"
 subnetBackendName="app-tier-Subnet"
 subnetDatabaseName="db-tier-Subnet"
-jumpboxVMName="JumpboxVM"
+jumpboxVMName="jumpbox-vm"
 
 # Prompt for user input
 # read -p "Enter the resource group name: " resourceGroupName
@@ -59,28 +59,28 @@ az network vnet subnet create \
 # Create a network security group for each subnet
 az network nsg create \
     --resource-group "$resourceGroupName" \
-    --name "${subnetJumpboxName}NSG" \
+    --name "${subnetJumpboxName}-NSG" \
     --location "$location"
 
 az network nsg create \
     --resource-group "$resourceGroupName" \
-    --name "${subnetFrontendName}NSG" \
+    --name "${subnetFrontendName}-NSG" \
     --location "$location"
 
 az network nsg create \
     --resource-group "$resourceGroupName" \
-    --name "${subnetBackendName}NSG" \
+    --name "${subnetBackendName}-NSG" \
     --location "$location"
 
 az network nsg create \
     --resource-group "$resourceGroupName" \
-    --name "${subnetDatabaseName}NSG" \
+    --name "${subnetDatabaseName}-NSG" \
     --location "$location"
 
 # Create default rules for each NSG (Allow SSH from your public IP, Allow HTTP, Allow MySQL)
 az network nsg rule create \
     --resource-group "$resourceGroupName" \
-    --nsg-name "${subnetJumpboxName}NSG" \
+    --nsg-name "${subnetJumpboxName}-NSG" \
     --name "AllowSSHFromYourIP" \
     --priority 1000 \
     --protocol "Tcp" \
@@ -92,7 +92,7 @@ az network nsg rule create \
 
 az network nsg rule create \
     --resource-group "$resourceGroupName" \
-    --nsg-name "${subnetFrontendName}NSG" \
+    --nsg-name "${subnetFrontendName}-NSG" \
     --name "AllowHTTP" \
     --priority 1000 \
     --protocol "Tcp" \
@@ -104,7 +104,7 @@ az network nsg rule create \
 
 az network nsg rule create \
     --resource-group "$resourceGroupName" \
-    --nsg-name "${subnetBackendName}NSG" \
+    --nsg-name "${subnetBackendName}-NSG" \
     --name "AllowHTTP" \
     --priority 1000 \
     --protocol "Tcp" \
@@ -116,7 +116,7 @@ az network nsg rule create \
 
 az network nsg rule create \
     --resource-group "$resourceGroupName" \
-    --nsg-name "${subnetBackendName}NSG" \
+    --nsg-name "${subnetBackendName}-NSG" \
     --name "AllowMySQL" \
     --priority 1010 \
     --protocol "Tcp" \
@@ -128,7 +128,7 @@ az network nsg rule create \
 
 az network nsg rule create \
     --resource-group "$resourceGroupName" \
-    --nsg-name "${subnetDatabaseName}NSG" \
+    --nsg-name "${subnetDatabaseName}-NSG" \
     --name "AllowMySQL" \
     --priority 1000 \
     --protocol "Tcp" \
@@ -143,54 +143,36 @@ az network vnet subnet update \
     --resource-group "$resourceGroupName" \
     --vnet-name "$vnetName" \
     --name "$subnetJumpboxName" \
-    --network-security-group "${subnetJumpboxName}NSG"
+    --network-security-group "${subnetJumpboxName}-NSG"
 
 az network vnet subnet update \
     --resource-group "$resourceGroupName" \
     --vnet-name "$vnetName" \
     --name "$subnetFrontendName" \
-    --network-security-group "${subnetFrontendName}NSG"
+    --network-security-group "${subnetFrontendName}-NSG"
 
 az network vnet subnet update \
     --resource-group "$resourceGroupName" \
     --vnet-name "$vnetName" \
     --name "$subnetBackendName" \
-    --network-security-group "${subnetBackendName}NSG"
+    --network-security-group "${subnetBackendName}-NSG"
 
 az network vnet subnet update \
     --resource-group "$resourceGroupName" \
     --vnet-name "$vnetName" \
     --name "$subnetDatabaseName" \
-    --network-security-group "${subnetDatabaseName}NSG"
-
-# Create a public IP address
-az network public-ip create \
-    --resource-group "$resourceGroupName" \
-    --name "JumpboxPublicIP" \
-    --location "$location" \
-    --allocation-method "Dynamic"
-
-az ssh key create \
-    --resource-group "$resourceGroupName" \
-    --name "MySSHKey" \
-    --public-key "~/.ssh/host-key.pub"
+    --network-security-group "${subnetDatabaseName}-NSG"
 
 # Create the jumpbox virtual machine with the B2 size (Change image if needed)
 az vm create \
     --resource-group "$resourceGroupName" \
     --name "JumpboxVM" \
     --location "$location" \
-    --nics "JumpboxNIC" \
-    --image "UbuntuLTS" \
+    --vnet-name "$vnetName" \
+    --subnet "$subnetJumpboxName" \
+    --image "Ubuntu2204" \
     --admin-username "azureuser" \
     --authentication-type "ssh" \
-    --ssh-key-value "~/.ssh/host-key.pub" \
-    --size "Standard_B2s"
-    --os-disk-storage-account-type "Standard_LRS"
-
-# Attach the public IP to the VM
-az network nic ip-config update \
-    --resource-group "$resourceGroupName" \
-    --nic-name "JumpboxNIC" \
-    --name "ipconfig1" \
-    --public-ip-address "JumpboxPublicIP"
+    --ssh-key-value "~/.ssh/host_key.pub" \
+    --size "Standard_B2s" \
+    --public-ip-sku "Standard"
