@@ -8,6 +8,7 @@ subnetJumpboxName="jumpbox-Subnet"
 subnetFrontendName="web-tier-Subnet"
 subnetBackendName="app-tier-Subnet"
 subnetDatabaseName="db-tier-Subnet"
+subnetAppGWName="appgw-Subnet"
 jumpboxVMName="jumpbox-vm"
 
 # Prompt for user input
@@ -55,6 +56,12 @@ az network vnet subnet create \
     --vnet-name "$vnetName" \
     --name "$subnetDatabaseName" \
     --address-prefix 172.20.4.0/24
+
+az network vnet subnet create \
+    --resource-group "$resourceGroupName" \
+    --vnet-name "$vnetName" \
+    --name "$subnetAppGWName" \
+    --address-prefix 172.20.0.0/24
 
 # Create a network security group for each subnet
 az network nsg create \
