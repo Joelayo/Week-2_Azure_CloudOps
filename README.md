@@ -7,7 +7,7 @@ My project aims to deploy a highly available and scalable three-tier web applica
 This project showcases the power of Azure's infrastructure as a service (IaaS) and platform as a service (PaaS) offerings to deploy a robust and reliable three-tier web application architecture. By utilizing Azure's load balancers, VMSS, managed databases, and security features, we ensure our application is highly available, scalable, and secure, providing an excellent user experience while minimizing operational overhead.
 
 ## 🏠 Architecture
-![Architecture of the application](architectur.gif)
+![Architecture of the application](architecture.png)
 
 ## Web Application Tech stack
 
